@@ -1,0 +1,104 @@
+public class ErrorLog
+{
+    private static string _ErrorLogDir = string.Format("{0}", ConfigurationSettings.AppSettings["ErrLog"]);
+    private static string _TraceDir = string.Format("{0}", ConfigurationSettings.AppSettings["TrcLog"]);
+
+    private static string _Heading()
+    {
+        return string.Format("{0}", DateTime.Now.ToString("[hh:mm:ss:fff]"));
+    }
+
+    public static void SMTTrace(string Msg)
+    {
+        try
+        {
+            if (!Directory.Exists(_TraceDir))
+            {
+                Directory.CreateDirectory(_TraceDir);
+            }
+
+            string strFileName = string.Format(@"{0}\Log_{1}.txt", _TraceDir, DateTime.Now.ToString("ddMMMyyyy_HH"));
+            StreamWriter sw = new StreamWriter(strFileName, true);
+            sw.WriteLine(string.Format("{2}{0}: {1}", DateTime.Now.ToString("[HH:mm:ss:fff]"), Msg, HttpContext.Current.Session["TId"] + "--"));
+            sw.Flush();
+            sw.Close();
+        }
+        catch{}
+    }
+
+    public static void BookingTrace(string Msg,string request)
+    {
+        try
+        {
+            if (!Directory.Exists(_TraceDir))
+            {
+                Directory.CreateDirectory(_TraceDir);
+            }
+
+            string strFileName = string.Format(@"{0}\Lg_{1}_{2}{3}.txt", _TraceDir,request,DateTime.Now.ToString("ddMMMyyyy_HH"),DateTime.Now.ToString("mmmm")); 
+            StreamWriter sw = new StreamWriter(strFileName, true);
+            sw.WriteLine(string.Format("{2}{0}: {1}", DateTime.Now.ToString("[HH:mm:ss:fff]"), Msg, HttpContext.Current.Session["TId"] + "--"));
+            sw.Flush();
+            sw.Close();
+        }
+        catch { }
+    }
+
+    public static void Write(string prErrMsg)
+    {
+        Write(prErrMsg, "", "");
+    }
+
+    public static void Write(string prErrMsg, string FileName)
+    {
+        Write(prErrMsg, FileName, "");
+    }
+
+    public static void Write(string prErrMsg, string FileName, string MethodName)
+    {
+        try
+        {
+            if (!Directory.Exists(string.Format(@"{0}\", _ErrorLogDir)))
+            {
+                Directory.CreateDirectory(string.Format(@"{0}\", _ErrorLogDir));
+            }
+
+            string strFileName = string.Format(@"{0}\{1}.txt", _ErrorLogDir, DateTime.Now.ToString("ddMMMyyyy_HH"));
+
+            StreamWriter sw = new StreamWriter(strFileName, true);
+            sw.WriteLine(_Heading());
+            if (FileName.Length > 0)
+                sw.Write(" PageName : " + FileName);
+            if (MethodName.Length > 0)
+                sw.WriteLine(" MethodName : " + MethodName);
+            sw.WriteLine("ERR : " + prErrMsg);
+            sw.WriteLine("------------------");
+            sw.Flush();
+            sw.Close();
+        }
+        catch
+        {
+        }
+    }
+
+    public static void AllTrace(string User, string PN , string MethodName, string sp)
+    {
+        try
+        {
+            string strAllTrace = _TraceDir;
+            strAllTrace = strAllTrace + "/DBLog/" ;
+            if (!Directory.Exists(strAllTrace))
+            {
+                Directory.CreateDirectory(strAllTrace);
+            }
+
+            string strFileName = string.Format(@"{0}\Log_{1}.txt", strAllTrace, DateTime.Now.ToString("ddMMMyyyy_HH"));
+            StreamWriter sw = new StreamWriter(strFileName, true);
+            sw.WriteLine(string.Format("{0},{1},{2},{3},{4}", DateTime.Now.ToString("[HH:mm:ss:fff]"), User, PN, MethodName, "sp : " + sp));
+            sw.Flush();
+            sw.Close();
+        }
+        catch { }
+    }
+
+}
