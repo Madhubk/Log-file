@@ -1,0 +1,349 @@
+ private static object UPInvCmlog = new object();
+        string ErrorPath = ConfigurationManager.AppSettings["Path"].ToString();
+        string mstrpath = ConfigurationManager.AppSettings["ErrorPath"];
+
+
+        public void ErrLog(string lstrParameter)
+        {
+            string lStrDay = DateTime.Now.ToString("dd");
+            string lStrMonth = DateTime.Now.ToString("MM");
+            string lStrYear = DateTime.Now.ToString("yy");
+            string lStrDate = lStrDay + lStrMonth + lStrYear;
+            try
+            {
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    string pkeyval = null;
+                    pkeyval = DateTime.Now.ToString() + "Error Datas :" + lstrParameter;
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", item._ErrorLogDir, DateTime.Now.ToString("ddMMMyyyy_HH"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.Write(pkeyval);
+                    sw.WriteLine("*--------------------*" + "\n");
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+
+        }
+
+        public void ErrorLogFileAll(string Pgname, string ProcedureName, string ExceptionMessage)
+        {
+            try
+            {
+                string pkeyval = null;
+                string pkeyval1 = null;
+                string pkeyval2 = null;
+                DataSet ds = new DataSet();
+                pkeyval = "Log Entry On  :" + DateTime.Now.ToString() + "\n" + " ClassName:-" + Pgname + ".";
+                pkeyval1 = "\n" + "ProcedureName :" + "@" + ProcedureName + ".";
+                pkeyval2 = "\n" + "Message :" + ExceptionMessage + ".";
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", item._ErrorLogDir, DateTime.Now.ToString("ddMMMyyyy"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.Write(pkeyval);
+                    sw.Write(pkeyval1);
+                    sw.Write(pkeyval2);
+                    sw.WriteLine("\n" + "--------------------------------------------------------------------------------------------------------------------------------------------");
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+        }
+
+        public void TryCatchLogFile(string Pgname, string ProcedureName, string ExceptionMessage)
+        {
+            string Name = "ERR";
+            try
+            {
+                string pkeyval = null;
+                string pkeyval1 = null;
+                string pkeyval2 = null;
+                DataSet ds = new DataSet();
+                pkeyval = "Log Entry On  :" + DateTime.Now.ToString() + "  " + Pgname + ".";
+                pkeyval1 = "ProcedureName :" + "@" + ProcedureName + " ";
+                pkeyval2 = "Message :" + ExceptionMessage + ".";
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", item._ErrorLogDir, Name + "_" + DateTime.Now.ToString("ddMMMyyyy_HH"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.Write(pkeyval);
+                    sw.Write(pkeyval1);
+                    sw.Write(pkeyval2);
+                    sw.WriteLine("\n" + "--------------------------------------------------------------------------------------------------------------------------------------------");
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+        }
+
+        public void ProiderNameErrLog(string ProviderName, string Pgname, string ProcedureName, string ExceptionMessage)
+        {
+            try
+            {
+                //ErrlogPMS pms=new ErrlogPMS ();
+                string pkeyval = null;
+                string pkeyval1 = null;
+                string pkeyval2 = null;
+                string pkeyval3 = null;
+                DataSet ds = new DataSet();
+                pkeyval = "Log Entry On  :" + DateTime.Now.ToString() + " ";
+                pkeyval1 = "\n" + "ControllerName :" + Pgname + ".";
+                pkeyval2 = "\n" + "ProcedureName :" + "@" + ProcedureName + " ";
+                pkeyval3 = "\n" + "Message :" + ExceptionMessage + ".";
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", item._ErrorLogDir + @"\" + ProviderName, DateTime.Now.ToString("ddMMMyyyy"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.WriteLine(string.Format("{0}", DateTime.Now.ToString("[hh:mm:ss:fff]")));
+                    sw.Write(pkeyval);
+                    sw.Write(pkeyval1);
+                    sw.Write(pkeyval2);
+                    sw.Write(pkeyval3);
+                    sw.WriteLine("\n" + "--------------------------------------------------------------------------------------------------------------------------------------------");
+                    sw.Flush();
+                    sw.Close();
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+        }
+
+        public void ProiderNameErrLogHour(string ProviderName, string Pgname, string ProcedureName, string ExceptionMessage)
+        {
+            try
+            {
+                string pkeyval = null;
+                string pkeyval1 = null;
+                string pkeyval2 = null;
+                DataSet ds = new DataSet();
+                pkeyval = "Log Entry On  :" + DateTime.Now.ToString() + "  " + Pgname + ".";
+                pkeyval1 = "ProcedureName :" + "@" + ProcedureName + " ";
+                pkeyval2 = "Message :" + ExceptionMessage + ".";
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", item._ErrorLogDir + @"\" + ProviderName, DateTime.Now.ToString("ddMMMyyyy_HH"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.Write(pkeyval);
+                    sw.Write(pkeyval1);
+                    sw.Write(pkeyval2);
+                    sw.WriteLine("\n" + "--------------------------------------------------------------------------------------------------------------------------------------------");
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+        }
+
+        public void ProiderNameReqResXml(string ProviderName, string Pgname, string ProcedureName, string ExceptionMessage)
+        {
+
+            try
+            {
+                XmlDocument xmldoc = new XmlDocument();
+                //string pkeyval2 = null;
+                DataSet ds = new DataSet();
+                xmldoc.LoadXml(ExceptionMessage);
+                XmlSerializer serExpediaRes = new XmlSerializer(xmldoc.GetType());
+                //pkeyval2 = ExceptionMessage;
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.xml", item._ErrorLogDir + @"\" + ProviderName, ProcedureName + "_" + DateTime.Now.ToString("ddMMMyyyy_hh_mm_ss_ffffff"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.Write(xmldoc.InnerXml);
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+        }
+
+        public void ProiderNameReqResJson(string ProviderName, string Pgname, string ProcedureName, string ExceptionMessage)
+        {
+            try
+            {
+
+                string pkeyval2 = null;
+                DataSet ds = new DataSet();
+                pkeyval2 = ExceptionMessage;
+                cmerrlog newerrlog = new cmerrlog();
+                foreach (var item in newerrlog.GIChannManErrlogs)
+                {
+                    if (!Directory.Exists(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName)))
+                    {
+                        Directory.CreateDirectory(string.Format(@"{0}\", item._ErrorLogDir + @"\" + ProviderName));
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", item._ErrorLogDir + @"\" + ProviderName, ProcedureName + "_" + DateTime.Now.ToString("ddMMMyyyy _hh_mm_ss_ffffff"));
+                    StreamWriter sw = new StreamWriter(strFileName, true);
+                    sw.Write(pkeyval2);
+                    sw.Flush();
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrLog(ex.ToString());
+            }
+        }
+
+        //public static string MappedApplicationPath
+        //{
+          
+        //    get
+        //    {
+        //        string APP_PATH = System.Web.HttpContext.Current.Request.ApplicationPath.ToLower();
+        //        if (APP_PATH == "/")      //a site
+        //            APP_PATH = "/";
+        //        else if (!APP_PATH.EndsWith(@"/")) //a virtual
+        //            APP_PATH += @"/";
+
+        //        string it = System.Web.HttpContext.Current.Server.MapPath(APP_PATH);
+        //        if (!it.EndsWith(@"\"))
+        //            it += @"\";
+        //        return it;
+        //    }     
+            
+        //}
+
+        public void ErrorLog_Day(string controllername, string MethodName, string Procedure, string Exception)
+        {
+            try
+            {
+                lock (UPInvCmlog)
+                {
+                    string Log = "";
+                    string controller = "";
+                    string method = "";
+                    string procedure = "";
+                    string exception = "";
+                    Log = "Log Entry On  :" + DateTime.Now.ToString() + " ";
+                    controller = "\n" + "Controller Name:" + controllername + "";
+                    method = "\n" + "Method Name :" + MethodName + ".";
+                    procedure = "\n" + "ProcedureName :" + "@" + Procedure + " ";
+                    exception = "\n" + "Message :" + Exception + ".";
+                    String DateFolder = ErrorPath + DateTime.Now.ToString("ddMMMyyyy");
+                    if (!Directory.Exists(DateFolder))
+                    {
+                        Directory.CreateDirectory(DateFolder);
+                    }
+                    string ControllerFolder = DateFolder + "\\" + controllername;
+
+                    if (!Directory.Exists(ControllerFolder))
+                    {
+                        Directory.CreateDirectory(ControllerFolder);
+                    }
+                    string strFileName = string.Format(@"{0}\{1}.txt", ControllerFolder, DateTime.Now.ToString("ddMMMyyyy"));
+                    StreamWriter wr = new StreamWriter(strFileName, true);
+                    wr.WriteLine(string.Format("{0}", DateTime.Now.ToString("[hh:mm:ss:fff]")));
+                    wr.Write(Log);
+                    wr.Write(controller);
+                    wr.Write(method);
+                    wr.Write(procedure);
+                    wr.Write(exception);
+                    wr.Flush();
+                    wr.WriteLine("\n" + "----------------------------------------------------------------------------------------------------");
+                    wr.Close();
+                }
+            }
+            catch { }
+        }
+
+        public void ErrorLog_Hour(string controllername, string MethodName, string Procedure, string Exception)
+        {
+            try
+            {
+                lock (UPInvCmlog)
+                {
+                    string Log = "";
+                    string controller = "";
+                    string method = "";
+                    string procedure = "";
+                    string exception = "";
+                    Log = "Log Entry On  :" + DateTime.Now.ToString() + " ";
+                    controller = "\n" + "Controller Name:" + controllername + "";
+                    method = "\n" + "Method Name :" + MethodName + ".";
+                    procedure = "\n" + "ProcedureName :" + "@" + Procedure + " ";
+                    exception = "\n" + "Message :" + Exception + ".";
+                    String DateFolder = ErrorPath + DateTime.Now.ToString("ddMMMyyyy");
+                    if (!Directory.Exists(DateFolder))
+                    {
+                        Directory.CreateDirectory(DateFolder);
+                    }
+                    string ControllerFolder = DateFolder + "\\" + controllername;
+
+                    if (!Directory.Exists(ControllerFolder))
+                    {
+                        Directory.CreateDirectory(ControllerFolder);
+                    }
+
+                    string strFileName = string.Format(@"{0}\{1}.txt", ControllerFolder, DateTime.Now.ToString("ddMMMyyyy_HH"));
+
+                    StreamWriter wr = new StreamWriter(strFileName, true);
+                    wr.WriteLine(string.Format("{0}", DateTime.Now.ToString("[hh:mm:ss:fff]")));
+                    wr.Write(Log);
+                    wr.Write(controller);
+                    wr.Write(method);
+                    wr.Write(procedure);
+                    wr.Write(exception);
+                    wr.Flush();
+                    wr.WriteLine("\n" + "----------------------------------------------------------------------------------------------------");
+                    wr.Close();
+
+                }
+            }
+            catch { }
+        }
+    }
+}
